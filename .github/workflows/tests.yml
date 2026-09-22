@@ -1,0 +1,38 @@
+name: Run Valkey tests with Luau
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  tests:
+    name: ${{ matrix.server_version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        server_version: ["unstable", "9.1"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7.0.1
+
+      - name: Update submodule
+        run: git submodule update --init --recursive
+
+      - name: Get deps
+        run: sudo apt-get install -y pkg-config tcl8.6 tclx cmake libssl-dev
+
+      - name: Clean
+        run: ./build.sh --clean
+
+      - name: Build
+        env:
+          SERVER_VERSION: ${{ matrix.server_version }}
+        run: ./build.sh --with-tests
+
+      - name: Run tests
+        run: |
+          ./tests/run-valkey-tests.sh --skiptest "Process title set as expected" --verbose --dump-logs

@@ -1,0 +1,21 @@
+Source: valkey-luau
+Section: database
+Priority: optional
+Maintainer: Valkey Contributors <valkey@lists.valkey.io>
+Build-Depends: debhelper-compat (= 13),
+               cmake (>= 3.13),
+               gcc,
+               g++,
+               make
+Standards-Version: 4.6.2
+Homepage: https://github.com/secwall/valkey-luau
+Rules-Requires-Root: no
+
+Package: valkey-luau
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: valkey-server (>= 9.1) | valkey (>= 9.1)
+Description: Luau scripting engine module for Valkey
+ A Luau scripting engine module for Valkey that provides EVAL,
+ EVALSHA, FUNCTION, and SCRIPT commands backed by an embedded Luau
+ interpreter.

@@ -1,0 +1,46 @@
+%global upstream_version #[VERSION]
+%global valkey_modules_dir %{_libdir}/valkey/modules
+%global debug_package %{nil}
+
+Name:           #[PKG_NAME]
+Version:        #[RPM_VERSION]
+Release:        1%{dist}
+Summary:        Luau scripting engine module for Valkey
+
+License:        BSD-3-Clause
+
+URL:            https://github.com/secwall/valkey-luau
+Source:         valkey-luau-%{upstream_version}.tar.gz
+
+BuildRequires:  gcc
+BuildRequires:  gcc-c++
+BuildRequires:  cmake >= 3.13
+BuildRequires:  make
+
+Recommends:     valkey >= 9.1
+
+%global _description %{expand:
+A Luau scripting engine module for Valkey that provides EVAL,
+EVALSHA, FUNCTION, and SCRIPT commands backed by an embedded Luau
+interpreter.}
+
+%description %{_description}
+
+%prep
+%autosetup -n valkey-luau-%{upstream_version} -p1
+
+%build
+mkdir -p build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+%make_build
+
+%install
+install -pDm755 build/libvalkeyluau.so -t %{buildroot}%{valkey_modules_dir}
+
+%files
+%{valkey_modules_dir}/libvalkeyluau.so
+%license LICENSE
+%doc README.md
+
+%changelog
