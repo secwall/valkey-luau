@@ -1,0 +1,9 @@
+build/
+*.o
+*.so
+*.dylib
+*.a
+.cache/
+
+# local reference checkouts, not part of this repo
+references/
